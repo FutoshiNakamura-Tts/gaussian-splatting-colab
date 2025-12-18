@@ -6,9 +6,9 @@
 
 | Colab | Info
 | --- | --- |
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/gaussian-splatting-colab/blob/main/gaussian_splatting_colab.ipynb) | gaussian_splatting_colab
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1YniEH63VfZPuRGTddviUvNH48cDaLqtg) | Clip Guided Gaussian Splatting Colab (thanks to [@aman_gif](https://twitter.com/aman_gif) ❤)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camenduru/gaussian-splatting-colab/blob/main/gaussian_splatting_viewer_colab.ipynb) | gaussian_splatting_viewer_colab (thanks to [@antimatter15](https://twitter.com/antimatter15) ❤)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FutoshiNakamura-Tts/gaussian-splatting-colab/blob/colab-t4-2025-12-18/gaussian_splatting_colab.ipynb) | gaussian_splatting_colab
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FutoshiNakamura-Tts/gaussian-splatting-colab/blob/colab-t4-2025-12-18/gaussian_splatting_viewer_colab.ipynb) | gaussian_splatting_viewer_colab
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FutoshiNakamura-Tts/gaussian-splatting-colab/blob/colab-t4-2025-12-18/build_wheels.ipynb) | **(New)** build_wheels (Fresh Build)
 
 ## Viewer Tutorial
 We can drag and drop our `point_cloud.ply` 🥳
