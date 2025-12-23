@@ -10,6 +10,26 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FutoshiNakamura-Tts/gaussian-splatting-colab/blob/colab-t4-2025-12-18/gaussian_splatting_viewer_colab.ipynb) | gaussian_splatting_viewer_colab
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FutoshiNakamura-Tts/gaussian-splatting-colab/blob/colab-t4-2025-12-18/build_wheels.ipynb) | **(New)** build_wheels (Fresh Build)
 
+
+## 🚀 Features (New)
+
+
+### Feature Selection (New)
+**Rasterizer Engine**:
+- **Standard**: The default stable rasterizer.
+- **Accelerated**: Uses the `3dgs_accel` branch with Sparse Adam optimizer for faster training.
+
+**Training Options**:
+- **Anti-aliasing**: Integration of Mip-Splatting EWA filter.
+- **Exposure Compensation**: Automatic affine transformation for varying exposures.
+- **Depth Regularization**: Use depth priors for better geometry.
+
+*Dependencies are automatically re-installed when you switch the Rasterizer!*
+
+### File Browser & Data Source
+- **Local Folder**: Support for using any local folder on the VM as a data source.
+- **File Browser**: A built-in GUI file browser helps you navigate `/content/drive` or other paths without manual typing.
+
 ## Viewer Tutorial
 We can drag and drop our `point_cloud.ply` 🥳
 
