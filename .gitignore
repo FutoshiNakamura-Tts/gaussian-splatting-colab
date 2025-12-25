@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+
+# Jupyter / Colab
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Project Specific - Data & Outputs
+# We generally don't want to commit large datasets or training outputs
+data/
+output/
+*.zip
+*.ply
+*.splat
+*.wply
+
+# Colab Default
+sample_data/

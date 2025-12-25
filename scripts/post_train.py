@@ -15,9 +15,17 @@ def zip_output(output_path):
     root_dir = os.path.dirname(output_path)
     base_dir = base_name
     
-    shutil.make_archive(output_path, 'zip', root_dir, base_dir)
-    log(f"Created zip: {zip_path}")
-    return zip_path
+    # Add timestamp to filename
+    import time
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    zip_path_with_ts = f"{output_path}_{timestamp}"
+    
+    # make_archive appends .zip automatically
+    shutil.make_archive(zip_path_with_ts, 'zip', root_dir, base_dir)
+    
+    final_zip_path = f"{zip_path_with_ts}.zip"
+    log(f"Created zip: {final_zip_path}")
+    return final_zip_path
 
 def transfer_results(output_path, drive_dest=None, tailscale_target=None):
     if not os.path.exists(output_path):

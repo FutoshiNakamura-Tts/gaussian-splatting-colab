@@ -1,93 +1,59 @@
 
 import os
 import sys
-import shutil
 import argparse
+import shutil
+import glob
 from utils import log, run_command
 
-def prepare_data(source_type, path_or_url=None, save_zip=False):
+def prepare_data(source_type, path_or_url=None):
     log(f"=== Preparing Data: {source_type} ===")
-    os.chdir('/content')
+    
+    # Target directory for data
+    # Note: Gaussian Splatting expects source to be passed to train.py, 
+    # but we usually assume some standard location or just use the path provided.
     
     if source_type == "Demo Data":
-        if not os.path.exists('tandt_db'):
-            log("Downloading TandT Demo Data...")
-            run_command("wget -q https://huggingface.co/camenduru/gaussian-splatting/resolve/main/tandt_db.zip")
-            run_command("unzip -q tandt_db.zip")
+        # Keep existing Demo Data logic (Truck)
+        if not os.path.exists("/content/tandt"):
+             log("Downloading TandT Truck dataset...")
+             run_command("wget https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/datasets/input/tandt_db.zip")
+             run_command("unzip -q tandt_db.zip -d /content/tandt")
         else:
-            log("Demo data already exists.")
-
-    elif source_type == "Google Drive":
+             log("Demo data already present.")
+             
+    elif source_type == "User Data (Path)":
         if not path_or_url:
-            log("Error: No Drive path provided.")
+            log("Error: No path provided for User Data.")
             return
 
-        drive_path_val = path_or_url
-        if not os.path.exists(drive_path_val):
-            log(f"Error: Drive Path {drive_path_val} does not exist. Mount drive first?")
+        if not os.path.exists(path_or_url):
+            log(f"Error: Path '{path_or_url}' does not exist on this system.")
+            log("Please use 'scripts/local_transfer.sh upload' to transfer your data first.")
             return
-        
-        if os.path.isfile(drive_path_val):
-             fname = os.path.basename(drive_path_val)
-             if fname.lower().endswith('.zip'):
-                 log(f"Copying and unzipping {fname}...")
-                 shutil.copy(drive_path_val, f"./{fname}")
-                 run_command(f"unzip -q \"{fname}\"")
-             else:
-                 log(f"Copying {fname}...")
-                 shutil.copy(drive_path_val, ".")
-        elif os.path.isdir(drive_path_val):
-            log(f"Target is a directory: {drive_path_val}. Using it directly.")
-
-    elif source_type == "Custom URL":
-        custom_url_val = path_or_url
-        if not custom_url_val:
-             log("Error: Custom URL is empty.")
-             return
-        log(f"Downloading from {custom_url_val}...")
-        fname = os.path.basename(custom_url_val)
-        if '?' in fname: fname = fname.split('?')[0]
-        if not fname: fname = "downloaded_data.zip"
-
-        run_command(f"wget -q -O {fname} {custom_url_val}")
-        
-        if fname.lower().endswith('.zip'):
-            log(f"Unzipping {fname}...")
-            run_command(f"unzip -q \"{fname}\"")
-        else:
-            log(f"Downloaded {fname}.")
             
-    elif source_type == "Local Folder": # Assumed to be on the server already
-        local_folder_val = path_or_url
-        if not local_folder_val or not os.path.exists(local_folder_val):
-             log(f"Error: Path {local_folder_val} does not exist.")
-             return
-        log(f"Using Local Folder: {local_folder_val}")
+        log(f"Validating data at: {path_or_url}")
+        
+        # Basic check for COLMAP output or images
+        has_images = os.path.exists(os.path.join(path_or_url, "images"))
+        has_sparse = os.path.exists(os.path.join(path_or_url, "sparse"))
+        
+        if has_images and has_sparse:
+            log("Structure looks correct (images + sparse). Ready for training.")
+        elif has_images and not has_sparse:
+            log("WARNING: Found 'images' but no 'sparse' folder.")
+            log("    If this is raw image data, you may need to run COLMAP (convert.py) manually.")
+            log("    (Automatic COLMAP execution is not yet implemented in this simplified script)")
+        else:
+            log("WARNING: Directory structure unclear. Ensure it contains 'images' and COLMAP 'sparse' output if pre-processed.")
 
-    # Note: 'Upload Zip' logic is handled by the Frontend (notebook) putting the file there, 
-    # or by user scp-ing the file. This script assumes the file might already be there or passed via path.
-    # For now, we support "File Path" as a generic handler if the zip is uploaded to /content.
-    elif source_type == "File Path":
-         fpath = path_or_url
-         if not os.path.exists(fpath):
-             log(f"Error: File {fpath} not found.")
-             return
-         
-         if fpath.lower().endswith('.zip'):
-             log(f"Unzipping {fpath}...")
-             run_command(f"unzip -q \"{fpath}\"")
-         else:
-             log(f"Using file {fpath}")
-
-    log("Data preparation complete.")
+    else:
+        log(f"Unknown source type: {source_type}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Prepare data for Gaussian Splatting.")
-    parser.add_argument("--source", type=str, default="Demo Data", 
-                        choices=["Demo Data", "Google Drive", "Custom URL", "Local Folder", "File Path"], 
-                        help="Type of data source")
-    parser.add_argument("--path", type=str, default="", help="Path or URL for the data")
+    parser = argparse.ArgumentParser(description="Prepare Data Script")
+    parser.add_argument("--source", type=str, required=True, help="Source Type")
+    parser.add_argument("--path", type=str, default=None, help="Path or URL")
     
     args = parser.parse_args()
-    
     prepare_data(args.source, args.path)
