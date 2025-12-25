@@ -125,7 +125,21 @@ if __name__ == '__main__':
     # Proxy Link
     proxy_url = None
     try:
-        proxy_base = eval_js(f"google.colab.kernel.proxyPort({port})")
+        import signal
+        def handler(signum, frame):
+            raise TimeoutError("Proxy resolution timed out")
+        
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(5) # 5 second timeout
+        
+        try:
+            proxy_base = eval_js(f"google.colab.kernel.proxyPort({port})")
+        except TimeoutError:
+            log("Proxy resolution timed out. Proceeding without Proxy URL.")
+            proxy_base = None
+        finally:
+            signal.alarm(0)
+
         if proxy_base:
             proxy_url = f"{proxy_base}{viewer_path}"
             log(f"\\n\ud83c\udf0d Public Proxy URL: {proxy_url}")
